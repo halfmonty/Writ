@@ -1,0 +1,152 @@
+﻿<Window x:Class="Writ.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Writ"
+        xmlns:business="clr-namespace:Writ.Business"
+        xmlns:Controls="clr-namespace:Writ.Presentation.Controls"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="598.521" Width="848.077" Background="#FF4F4F4F"
+        WindowStyle="None"
+        WindowStartupLocation="CenterOwner" AllowsTransparency="True"
+        ResizeMode="CanResizeWithGrip" Foreground="WhiteSmoke"
+        DataContext="{StaticResource MainViewModel}">
+
+    <Window.Resources>
+        <Controls:FlowDocumentToXamlConverter x:Key="flowDocumentConverter"/>
+    </Window.Resources>
+    <Window.CommandBindings>
+        <CommandBinding Command="ApplicationCommands.Open" Executed="Open_Executed" />
+        <CommandBinding Command="ApplicationCommands.Save" Executed="Save_Executed" />
+    </Window.CommandBindings>
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="3*"/>
+        </Grid.ColumnDefinitions>
+        <DockPanel x:Name="TitleBar" Grid.ColumnSpan="2" Height="30" Background="Transparent" MouseDown="TitleBar_MouseDown" Loaded="TitleBar_Loaded">
+            <Button x:Name="CloseButton" DockPanel.Dock="Right" Width="25" HorizontalAlignment="Right" Click="CloseButton_Click" Margin="2"/>
+            <Button x:Name="MaxButton" DockPanel.Dock="Right" Width="25" HorizontalAlignment="Right" Click="MaximizeButton_Click" Margin="2"/>
+            <Button x:Name="MinButton" DockPanel.Dock="Right" Width="25" HorizontalAlignment="Right" Click="MinimizeButton_Click" Margin="2"/>
+            <TextBlock HorizontalAlignment="Center" FontSize="18.667">Writ</TextBlock>
+        </DockPanel>
+
+        <DockPanel x:Name="MenuBar" Grid.Row="1" Height="Auto" Grid.ColumnSpan="4">
+            <Menu x:Name="File" DockPanel.Dock="Left" FontSize="18.667" Background="#FF474747" Foreground="#FFE8E8E8">
+                <MenuItem Header="_File" Foreground="#FFE4E4E4" Background="#FF616161" >
+                    <MenuItem Header="_New" Background="#FF838383" Click="MenuItem_Click"/>
+                    <MenuItem Header="_Open" Command="ApplicationCommands.Open"/>
+                    <MenuItem Header="_Save" Command="ApplicationCommands.Save"/>
+                    <Separator />
+                    <MenuItem Header="_Exit" Command="ApplicationCommands.Close"/>
+                </MenuItem>
+                <MenuItem Header="_Edit" Foreground="#FFE4E4E4" Background="#FF616161" >
+                    
+                </MenuItem>
+                <MenuItem Header="_Layout" Foreground="#FFE4E4E4" Background="#FF616161" >
+
+                </MenuItem>
+            </Menu>
+            
+        </DockPanel>
+        <Grid Grid.Row="2">
+            <business:OutlinedText x:Name="TextContent" Fill="#ffffffff" FontSize="28"     
+Bold="True" Stroke="Black" StrokeThickness="1" Text="Pending" Margin="10,0,10,0" 
+HorizontalAlignment="Center" VerticalAlignment="Center" Height="Auto" Width="Auto" />
+        </Grid>
+        <GridSplitter Grid.Row="2" Width="5"
+                      HorizontalAlignment="Right"
+                      VerticalAlignment="Stretch"
+                      Background="Gray" />
+        <Grid Grid.Row="2" Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+            </Grid.ColumnDefinitions>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Padding="4" MouseDown="TextBlock_MouseDown" DockPanel.Dock="Left">#</TextBlock>
+                <TextBlock x:Name="btnBold" Padding="4" FontWeight="Bold" Margin="20,0,0,0" Text="B" Background="Transparent">
+                    <TextBlock.InputBindings>
+                        <MouseBinding Command="EditingCommands.ToggleBold" CommandTarget="{Binding RTB, ElementName=EditBox}" MouseAction="LeftClick" />
+                    </TextBlock.InputBindings>
+                </TextBlock>
+                <TextBlock Padding="4" FontStyle="Italic" Text="I">
+                    <TextBlock.InputBindings>
+                        <MouseBinding Command="EditingCommands.ToggleItalic" CommandTarget="{Binding RTB, ElementName=EditBox}"  MouseAction="LeftClick" />
+                    </TextBlock.InputBindings>
+                </TextBlock>
+                <TextBlock Padding="4" TextDecorations="Underline" Text="U">
+                    <TextBlock.InputBindings>
+                        <MouseBinding Command="EditingCommands.ToggleUnderline" CommandTarget="{Binding RTB, ElementName=EditBox}"  MouseAction="LeftClick" />
+                    </TextBlock.InputBindings>
+                </TextBlock>
+                <TextBlock Padding="4" Text="&lt;" Margin="20,0,0,0">
+                    <TextBlock.InputBindings>
+                        <MouseBinding Command="ApplicationCommands.Undo" CommandTarget="{Binding RTB, ElementName=EditBox}"  MouseAction="LeftClick" />
+                    </TextBlock.InputBindings>
+                </TextBlock>
+                <TextBlock Padding="4" Text=">">
+                    <TextBlock.InputBindings>
+                        <MouseBinding Command="ApplicationCommands.Redo" CommandTarget="{Binding RTB, ElementName=EditBox}"  MouseAction="LeftClick" />
+                    </TextBlock.InputBindings>
+                </TextBlock>
+                <TextBlock Padding="4" Text="╠" Margin="20,0,0,0">
+                    <TextBlock.InputBindings>
+                        <MouseBinding Command="EditingCommands.AlignLeft" CommandTarget="{Binding RTB, ElementName=EditBox}"  MouseAction="LeftClick" />
+                    </TextBlock.InputBindings>
+                </TextBlock>
+                <TextBlock Padding="4" Text="═">
+                    <TextBlock.InputBindings>
+                        <MouseBinding Command="EditingCommands.AlignCenter" CommandTarget="{Binding RTB, ElementName=EditBox}"  MouseAction="LeftClick" />
+                    </TextBlock.InputBindings>
+                </TextBlock>
+                <TextBlock Padding="4" Text="╣">
+                    <TextBlock.InputBindings>
+                        <MouseBinding Command="EditingCommands.AlignRight" CommandTarget="{Binding RTB, ElementName=EditBox}"  MouseAction="LeftClick" />
+                    </TextBlock.InputBindings>
+                </TextBlock>
+                <TextBlock Padding="4" Text="¤" Margin="20,0,0,0">
+                    <TextBlock.InputBindings>
+                        <MouseBinding Command="EditingCommands.ToggleBullets" CommandTarget="{Binding RTB, ElementName=EditBox}"  MouseAction="LeftClick" />
+                    </TextBlock.InputBindings>
+                </TextBlock>
+                <TextBlock Padding="4" Text="¹²³" Height="15">
+                    <TextBlock.InputBindings>
+                        <MouseBinding Command="EditingCommands.ToggleNumbering" CommandTarget="{Binding RTB, ElementName=EditBox}"  MouseAction="LeftClick" />
+                    </TextBlock.InputBindings>
+                </TextBlock>
+                <ComboBox Name="cmbFontFamily" Width="150" SelectionChanged="cmbFontFamily_SelectionChanged" Margin="40,0,0,0" />
+                <ComboBox Name="cmbFontSize" Width="50" IsEditable="True" TextBoxBase.TextChanged="cmbFontSize_TextChanged" Margin="5,0,0,0"/>
+                <TextBlock Padding="4" Text="+">
+                    <TextBlock.InputBindings>
+                        <MouseBinding Command="EditingCommands.IncreaseFontSize" CommandTarget="{Binding RTB, ElementName=EditBox}"  MouseAction="LeftClick" />
+                    </TextBlock.InputBindings>
+                </TextBlock>
+                <TextBlock Padding="4" Text="-">
+                    <TextBlock.InputBindings>
+                        <MouseBinding Command="EditingCommands.DecreaseFontSize" CommandTarget="{Binding RTB, ElementName=EditBox}"  MouseAction="LeftClick" />
+                    </TextBlock.InputBindings>
+                </TextBlock>
+
+                <TextBlock Padding="4" Text="Spell" Margin="20,0,0,0" MouseDown="SpellCheck_Clicked"/>
+                <Button DockPanel.Dock="Right" Margin="15,0,0,0" Width="30" Height="20" Click="Button_Click" Content="&lt;O&gt;">
+                </Button>
+            </StackPanel>
+            
+            <Grid x:Name="BackColor" Grid.Row="1" Background="White" Margin="0,0,15,15"/>
+            <Controls:FsRichTextBox x:Name="EditBox" Grid.Row="1" Margin="0,0,15,15"
+                                    Document="{Binding Path=DocumentXaml, Converter={StaticResource flowDocumentConverter}, Mode=TwoWay}" SelectionChanged="rtbEditor_SelectionChanged" />
+        </Grid>
+
+    </Grid>
+</Window>

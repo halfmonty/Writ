@@ -1,0 +1,120 @@
+﻿<Window x:Name="window" x:Class="Writ.FullScreenWriting"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Writ"
+        xmlns:Controls="clr-namespace:Writ.Presentation.Controls"
+        xmlns:business="clr-namespace:Writ.Business"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        mc:Ignorable="d"
+        d:DesignHeight="1050" d:DesignWidth="1680"
+        Title="FullScreenWriting" WindowStyle="None" AllowsTransparency="True" Background="Transparent" Opacity="1" Loaded="Window_Loaded" 
+        DataContext="{StaticResource MainViewModel}">
+
+    <Window.Resources>
+        <Controls:FlowDocumentToXamlConverter x:Key="flowDocumentConverter"/>
+    </Window.Resources>
+
+    <Grid Background="Transparent">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="5*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="29*"/>
+            <RowDefinition Height="256*"/>
+            <RowDefinition Height="29*"/>
+        </Grid.RowDefinitions>
+        <Grid x:Name="backLayer" Grid.ColumnSpan="5" Grid.RowSpan="5" Background="White" Opacity="{Binding ElementName=opacitySlider, Path=Value}"/>
+        <Label Grid.Row="1" Content="{Binding ElementName=mySlider, Path=Value}"/>
+
+        <Controls:FsRichTextBox x:Name="EditBox" Grid.Row="1" Grid.Column="1" Background="Transparent" SelectionChanged="rtbEditor_SelectionChanged"
+                                    Document="{Binding Path=DocumentXaml, Converter={StaticResource flowDocumentConverter}, Mode=TwoWay}" RenderTransformOrigin="0.5,0.5" />
+        <Button Grid.Row="0" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Top" Width="15" Height="15" Click="Button_Click"/>
+        
+        <Expander Header="" Grid.Column="1" Height="100" Width="600" HorizontalAlignment="Center" IsExpanded="{Binding IsMouseOver, Mode=OneWay, RelativeSource={RelativeSource Self}}">
+            <Grid Background="#7FD6D6D6">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="test"/>
+                <xctk:ColorPicker Name="ClrPcker_Background" Width="50" Height="30" SelectedColorChanged="ClrPcker_Background_SelectedColorChanged"></xctk:ColorPicker >
+                <Slider x:Name="opacitySlider" Grid.Column="1" VerticalAlignment="Center" Orientation="Horizontal" Maximum="1" Minimum="0.01" TickFrequency="0.1" LargeChange="0.1" ></Slider>
+
+                <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center">
+                    <TextBlock x:Name="btnBold" Padding="4" FontWeight="Bold" Margin="20,0,0,0" Text="B" Background="Transparent">
+                        <TextBlock.InputBindings>
+                            <MouseBinding Command="EditingCommands.ToggleBold" CommandTarget="{Binding RTB, ElementName=EditBox}" MouseAction="LeftClick" />
+                        </TextBlock.InputBindings>
+                    </TextBlock>
+                    <TextBlock Padding="4" FontStyle="Italic" Text="I">
+                        <TextBlock.InputBindings>
+                            <MouseBinding Command="EditingCommands.ToggleItalic" CommandTarget="{Binding RTB, ElementName=EditBox}"  MouseAction="LeftClick" />
+                        </TextBlock.InputBindings>
+                    </TextBlock>
+                    <TextBlock Padding="4" TextDecorations="Underline" Text="U">
+                        <TextBlock.InputBindings>
+                            <MouseBinding Command="EditingCommands.ToggleUnderline" CommandTarget="{Binding RTB, ElementName=EditBox}"  MouseAction="LeftClick" />
+                        </TextBlock.InputBindings>
+                    </TextBlock>
+                    <TextBlock Padding="4" Text="&lt;" Margin="20,0,0,0">
+                        <TextBlock.InputBindings>
+                            <MouseBinding Command="ApplicationCommands.Undo" CommandTarget="{Binding RTB, ElementName=EditBox}"  MouseAction="LeftClick" />
+                        </TextBlock.InputBindings>
+                    </TextBlock>
+                    <TextBlock Padding="4" Text=">">
+                        <TextBlock.InputBindings>
+                            <MouseBinding Command="ApplicationCommands.Redo" CommandTarget="{Binding RTB, ElementName=EditBox}"  MouseAction="LeftClick" />
+                        </TextBlock.InputBindings>
+                    </TextBlock>
+                    <TextBlock Padding="4" Text="╠" Margin="20,0,0,0">
+                        <TextBlock.InputBindings>
+                            <MouseBinding Command="EditingCommands.AlignLeft" CommandTarget="{Binding RTB, ElementName=EditBox}"  MouseAction="LeftClick" />
+                        </TextBlock.InputBindings>
+                    </TextBlock>
+                    <TextBlock Padding="4" Text="═">
+                        <TextBlock.InputBindings>
+                            <MouseBinding Command="EditingCommands.AlignCenter" CommandTarget="{Binding RTB, ElementName=EditBox}"  MouseAction="LeftClick" />
+                        </TextBlock.InputBindings>
+                    </TextBlock>
+                    <TextBlock Padding="4" Text="╣">
+                        <TextBlock.InputBindings>
+                            <MouseBinding Command="EditingCommands.AlignRight" CommandTarget="{Binding RTB, ElementName=EditBox}"  MouseAction="LeftClick" />
+                        </TextBlock.InputBindings>
+                    </TextBlock>
+                    <TextBlock Padding="4" Text="¤" Margin="20,0,0,0">
+                        <TextBlock.InputBindings>
+                            <MouseBinding Command="EditingCommands.ToggleBullets" CommandTarget="{Binding RTB, ElementName=EditBox}"  MouseAction="LeftClick" />
+                        </TextBlock.InputBindings>
+                    </TextBlock>
+                    <TextBlock Padding="4" Text="¹²³" Height="15">
+                        <TextBlock.InputBindings>
+                            <MouseBinding Command="EditingCommands.ToggleNumbering" CommandTarget="{Binding RTB, ElementName=EditBox}"  MouseAction="LeftClick" />
+                        </TextBlock.InputBindings>
+                    </TextBlock>
+                    <ComboBox Name="cmbFontFamily" Width="150" SelectionChanged="cmbFontFamily_SelectionChanged" Margin="40,0,0,0" />
+                    <ComboBox Name="cmbFontSize" Width="50" IsEditable="True" TextBoxBase.TextChanged="cmbFontSize_TextChanged" Margin="5,0,0,0"/>
+                    <TextBlock Padding="4" Text="+">
+                        <TextBlock.InputBindings>
+                            <MouseBinding Command="EditingCommands.IncreaseFontSize" CommandTarget="{Binding RTB, ElementName=EditBox}"  MouseAction="LeftClick" />
+                        </TextBlock.InputBindings>
+                    </TextBlock>
+                    <TextBlock Padding="4" Text="-">
+                        <TextBlock.InputBindings>
+                            <MouseBinding Command="EditingCommands.DecreaseFontSize" CommandTarget="{Binding RTB, ElementName=EditBox}"  MouseAction="LeftClick" />
+                        </TextBlock.InputBindings>
+                    </TextBlock>
+
+                    <TextBlock Padding="4" Text="Spell" Margin="20,0,0,0" MouseDown="SpellCheck_Clicked"/>
+                </StackPanel>
+            </Grid>
+        </Expander>
+    </Grid>
+</Window>
