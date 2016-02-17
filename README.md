@@ -1,2 +1,2 @@
 # Writ
-First
+Minimalist word processor
